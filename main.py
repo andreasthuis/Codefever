@@ -1,10 +1,27 @@
-import time
-from pypresence import Presence
+import os
+import subprocess
 
-client_id = "your_client_id"
-RPC = Presence(client_id)
-RPC.connect()
+try:
+    __location__ = os.path.abspath(os.path.dirname(__file__))
+except NameError:
+    __location__ = os.getcwd()
 
-while True:
-    RPC.update(state="In Game", details="Playing Level 1", large_image="game_image", small_image="level1_icon", start=time.time())
-    time.sleep(15)
+file = input("Enter file name: ").strip()
+
+full_path = os.path.join(__location__, file)
+
+if not os.path.isfile(full_path):
+    print(f"Error: File '{full_path}' does not exist.")
+else:
+    if full_path.endswith('.py'):
+        cmd = ['python3', full_path]
+    else:
+        if not os.access(full_path, os.X_OK):
+            print(f"File '{full_path}' is not executable. Setting execute permission.")
+            os.chmod(full_path, 0o755)
+        cmd = [full_path]
+
+    try:
+        subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Execution failed: {e}")
