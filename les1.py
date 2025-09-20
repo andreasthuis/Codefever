@@ -1,6 +1,7 @@
-import google
+import googlesearch
 
-print(google.__version__)
-search = google.search("Python programming", num=5, stop=5, pause=2.0)
-for result in search:
-    print(result)
+def search_google(query, num_results=10):
+    """Search Google and return a list of URLs."""
+    return list(googlesearch.search(query))
+
+print(search_google("OpenAI", num_results=5))
